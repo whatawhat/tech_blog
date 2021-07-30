@@ -10,6 +10,7 @@ class User extends Model {
   }
 }
 
+//Defines table columns and specific requirements
 User.init(
   {
     id: {
@@ -18,7 +19,7 @@ User.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
