@@ -3,6 +3,7 @@ const sequelize = require('../config/connection');
 
 class Blog extends Model {}
 
+//Defines table columns and specific requirements
 Blog.init(
     {
         id: {
@@ -11,12 +12,13 @@ Blog.init(
             primaryKey:true,
             autoIncrement: true,
           },
-        name: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        description: {
-            type: DataTypes.STRING,
+        contents: {
+            type: DataTypes.TEXT,
+            allowNull: false,
         },
         user_id: {
             type: DataTypes.INTEGER,
@@ -25,6 +27,10 @@ Blog.init(
                 key: 'id',
             },
         },
+        date: {
+            type:DataTypes.DATE,
+            allowNull: false,
+            },
     },
     {
         sequelize,
@@ -36,4 +42,3 @@ Blog.init(
 );
 
 module.exports = Blog;
-
