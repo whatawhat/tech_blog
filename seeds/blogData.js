@@ -1,4 +1,4 @@
-const { Post } =  require('../models');
+const { Blog } =  require('../models');
 
 const blogData = [
 {
