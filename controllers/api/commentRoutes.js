@@ -14,7 +14,7 @@ router.post("/", withAuth, async (req, res) => {
         const commentInfo = await Comment.create({ //Comment is a model and create is a property
             comment: req.body.comment, //from the comment model and requesting the body and it can be entered
             blog_id: req.session.blog_id, //uses session because it's pulling from the id
-            user_id: req.session.user_ud
+            user_id: req.session.user_id
         })
         if(!commentInfo) {
             res.status(400).json({ message: "No comments for this user."});
