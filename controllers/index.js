@@ -1,14 +1,11 @@
 const router = require('express').Router();
-//Add models so I can use them
-const { User, Blog, Comment } = require('../models');
-//Express session data
-const session = require('express-session');
-//Authorization
-const withAuth = require('../utils/auth');
+//gets the files in the API directory
+const apiDir = require('./api');
 
+router.use('/api', apiDir);
 
-
-
-
+router.use((req, res) => {
+    res.status(400).end();
+});
 
 module.exports = router;
