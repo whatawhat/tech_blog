@@ -6,7 +6,7 @@ class Blog extends Model {}
 //Defines table columns and specific requirements
 Blog.init(
     {
-        id: {
+        id: { //an attribute
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey:true,
