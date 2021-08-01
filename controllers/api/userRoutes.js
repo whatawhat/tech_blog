@@ -1,10 +1,10 @@
 const router = require("express").Router();
 //Add models so I can use them
-const { User, Blog, Comment } = require("../models");
+const { User, Blog, Comment } = require("./index");
 //Express session data
 const session = require("express-session");
 //Authorization
-const withAuth = require("../utils/auth");
+const withAuth = require("../../utils/auth");
 //Sequelize to save session so user remains logged in
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
