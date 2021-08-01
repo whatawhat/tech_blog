@@ -9,9 +9,43 @@ const withAuth = require("../utils/auth");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 //Create new comment
-//View comment
-//Update comment
-//Delete comment
+router.post("/", withAuth, async (req, res) => {
+    try {
+        const commentInfo = await Comment.create({ //Comment is a model and create is a property
+            comment: req.body.comment, //from the comment model and requesting the body and it can be entered
+            blog_id: req.session.blog_id, //uses session because it's pulling from the id
+            user_id: req.session.user_ud
+        })
+        if(!commentInfo) {
+            res.status(400).json({ message: "No comments for this user."});
+            return;
+        }
+        res.json(commentInfo)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
+
+//View comment by GET
+router.get("/", withAuth, async (req, res) => {
+    try {
+        const commentInfo = await Comment.findAll(req.body, {})
+            if(!commentInfo) {
+                res.status(400).json({ message: "No comments for this post."});
+                return;
+            }
+            res.json(commentInfo)
+        } catch(err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+});
+
+//Update comment PUT
+
+
+//Delete comment DELETE
 
 
 
