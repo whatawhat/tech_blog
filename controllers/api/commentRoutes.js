@@ -43,37 +43,36 @@ router.get("/", withAuth, async (req, res) => {
 });
 
 //Update comment PUT
-
+router.put("/:id", withAuth, async (req, res) => {
+    try {
+        const commentInfo = await Comment.findOne({ where: comment_id = req.session.comment_id }
+            )
+            if(!commentInfo) {
+                res.status(400).json({ message: "No comment for this blog post."});
+                return;
+            }
+            res.json(commentInfo)
+    } catch(err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
 
 //Delete comment DELETE
-
-
-
-// POST /api/users -- add a new user
-router.post("/", async (req, res) => {
+router.delete("/:id", withAuth, async (req, res) => {
     try {
-      // create method
-      // expects an object in the form {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
-      const userInfo = await User.create({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password,
-      });
-      if (!userInfo) {
-        res.status(400).json({ message: "No user with that email address!" });
-        return;
-      }
-      // otherwise, save the session, and return the user object and a success message
-      req.session.save(() => {
-        // declare session variables
-        req.session.user_id = userInfo.id;
-        req.session.username = userInfo.username;
-        req.session.loggedIn = true;
-  
-        res.json(userInfo);
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
+        const commentInfo = await Comment.destroy({
+            where: {id: req.params.id}
+        })
+        if (!commentInfo) {
+            res.status(400).json({ message: "No comment for this blog post"});
+            return;
     }
-  });
+        res.json(commentInfo)
+        } catch(err) {
+            console.log(err);
+            res.status(500).json(err);
+    }
+});
+
+module.exports = roter;
