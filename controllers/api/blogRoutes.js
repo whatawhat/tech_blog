@@ -5,6 +5,7 @@ const { User, Blog, Comment } = require("../models");
 const session = require("express-session");
 //Authorization
 const withAuth = require("../utils/auth");
+const { post } = require("./userRoutes");
 //Sequelize to save session so user remains logged in
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
@@ -27,67 +28,113 @@ router.post("/", withAuth, async (req, res) => {
     }
 });
 
-
-
-//Create new comment
-router.post("/", withAuth, async (req, res) => {
+//Get all blog posts with title and date
+router.get("/", withAuth, async (req, res) => {
     try {
-        const commentInfo = await Comment.create({ //Comment is a model and create is a property
-            comment: req.body.comment, //from the comment model and requesting the body and it can be entered
-            blog_id: req.session.blog_id, //uses session because it's pulling from the id
-            user_id: req.session.user_ud
+        const blogInfo = await Blog.findAll({
+            attributes: [
+                'id',
+                'title',
+                'content',
+                'created_at',
+            ],
+            order: [[ 'created_at', 'DESC']],
+            include: [
+                {
+                    model: User,
+                    attributes: ['username']
+                },
+                {
+                    model: Comment,
+                    attributes: ['id', 'content', 'post_id', 'created_at'],
+                    include: {
+                        model: User,
+                        attributes: ['username']
+                    }
+                }
+            ]
         })
-        if(!commentInfo) {
-            res.status(400).json({ message: "No comments for this user."});
+        if(!blogInfo) {
+            res.status(400).json({ message: "No blog posts."})
             return;
         }
-        res.json(commentInfo)
+        res.json(blogInfo)
     } catch (err) {
         console.log(err);
         res.status(500).json(err);
     }
 });
 
-
-
-//Get all blog posts with title and date
 //Get one blog and get post title, content, username, date with option to leave comment
-//Delete a blog
-//Update a blog
-
-
-
-
-//View comment by GET
-router.get("/", withAuth, async (req, res) => {
+router.get("/:id", withAuth, async (req, res) => {
     try {
-        const commentInfo = await Comment.findAll(req.body, {})
-            if(!commentInfo) {
-                res.status(400).json({ message: "No comments for this post."});
-                return;
-            }
-            res.json(commentInfo)
+        const blogInfo = await Blog.findOne({
+            attributes: { exclude: ['password']},
+            where: {
+                id: req.params.id
+            },
+            include: [
+                {
+                    model: Blog,
+                    attributes: ['title', 'id', 'content', 'created_at']
+                },
+                {
+                    model: User,
+                    attributes: ['username']
+                },
+                {
+                    model: Comment,
+                    attributes: ['id', 'content', 'post_id', 'created_at'],
+                    include: {
+                        model: Blog,
+                        attributes: ['title']
+                    }
+                }
+            ]
+        })
+        if(!blogInfo) {
+            res.status(400).json({ message: "No blog found with this id."})
+            return;
+        }
+        res.json(blogInfo)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
+
+//Update a blog
+router.put("/id", withAuth, async (req, res) => {
+    try {
+        const blogInfo = await Blog.update(req.body, {
+            where: {id: req.params.id
+        }
+        })
+        if(!blogInfo) {
+            res.status(400).json({ message: "No blog post with that id"});
+            return;
+        }
+        res.json(blogInfo);
+    } catch(err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
+//Delete a blog
+router.delete("/:id", withAuth, async (req, res) => {
+    try {
+        const blogInfo = await Blog.destroy({
+            where: {id: req.params.id}
+        })
+        if (!blogInfo) {
+            res.status(400).json({ message: "No comment for this blog post"});
+            return;
+    }
+        res.json(blogInfo)
         } catch(err) {
             console.log(err);
             res.status(500).json(err);
-        }
-});
-
-//Create new comment
-router.post("/", withAuth, async (req, res) => {
-    try {
-        const commentInfo = await Comment.create({ //Comment is a model and create is a property
-            comment: req.body.comment, //from the comment model and requesting the body and it can be entered
-            blog_id: req.session.blog_id, //uses session because it's pulling from the id
-            user_id: req.session.user_ud
-        })
-        if(!commentInfo) {
-            res.status(400).json({ message: "No comments for this user."});
-            return;
-        }
-        res.json(commentInfo)
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
     }
 });
+
+module.exports = router;
