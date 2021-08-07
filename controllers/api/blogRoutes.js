@@ -1,6 +1,6 @@
 const router = require("express").Router();
 //Add models so I can use them
-const { User, Blog, Comment } = require("./index");
+const { User, Blog, Comment } = require("../../models");
 //Express session data
 const session = require("express-session");
 //Authorization
@@ -24,7 +24,7 @@ router.post("/", withAuth, async (req, res) => {
     res.json(blogInfo);
   } catch (err) {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 
@@ -41,7 +41,7 @@ router.get("/", withAuth, async (req, res) => {
         },
         {
           model: Comment,
-          attributes: ["id", "content", "post_id", "created_at"],
+          attributes: ["id", "content", "post_id", "created_at", "user_id"],
           include: {
             model: User,
             attributes: ["username"],
@@ -56,7 +56,7 @@ router.get("/", withAuth, async (req, res) => {
     res.json(blogInfo);
   } catch (err) {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 
@@ -111,7 +111,7 @@ router.put("/id", withAuth, async (req, res) => {
     res.json(blogInfo);
   } catch (err) {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 //Delete a blog
@@ -127,7 +127,7 @@ router.delete("/:id", withAuth, async (req, res) => {
     res.json(blogInfo);
   } catch (err) {
     console.log(err);
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 
