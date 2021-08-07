@@ -1,17 +1,7 @@
-<!-- Loop over each object in the projects array -->
-<div class="container-fluid">
-  <div class="row">
-    {{#each homeInfo as |homeInfo| }}
-    <div class="col"  id="blog-card">
-      <h2>
-        <a href="/blog/{{homeInfo.id}}">{{homeInfo.title}}</a>
-      </h2>
-      <p>Created by {{homeInfo.user.id}}</p>
-      <p>
-        {{homeInfo.content}}
-      </p>
-    </div>
-    {{/each}}
-  </div>
-</div>
+{{#each posts}}
+{{> post-info}}
+{{else}}
+<p>There are no posts</p>
+{{/each}}
+
 
