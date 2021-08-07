@@ -1,6 +1,6 @@
 const router = require("express").Router();
 //Add models so I can use them
-const { User, Blog, Comment } = require("./api/index");
+const { User, Blog, Comment } = require("../models");
 //Express session data
 const session = require("express-session");
 //Authorization
@@ -18,7 +18,7 @@ router.get('/', withAuth, async (req, res) => {
             where: {
                 user_id: req.session.user_id
             },
-            attributes: ["id", "title", "contents", "date"],
+            attributes: ["id", "title", "contents", "created_at"],
             order: [[ 'date', 'DESC']],
             include: [
                 {
@@ -27,7 +27,7 @@ router.get('/', withAuth, async (req, res) => {
                 },
                 {
                     model: Comment,
-                    attributes: ["id", "comment", "date", "blog_id", "user_id"],
+                    attributes: ["id", "comment", "created_at", "blog_id", "user_id"],
                     include: {
                         model: User,
                         attributes: ["username"],
@@ -35,21 +35,19 @@ router.get('/', withAuth, async (req, res) => {
                 }
             ]
         })
+        const blogs = dashInfo.map(blog => blog.get({ plain:true }));
+        res.render("dashboard", { blogs, loggedIn: true});
     } catch(err) {
         console.log(err);
-        res.status(500).json(err);
+        res.status(400).json(err);
     }
 });
 
 //Update blog post
 router.get('/edit/:id', withAuth, async (req, res) => {
     try {
-        // create method
-    // expects an object in the form {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
       const dashInfo = await Post.findOne({
-        where: {
-          id: req.params.id
-        },
+        where: { id: req.params.id },
         attributes: ['id', 'contents', 'title', 'created_at'],
         include: [
           {
@@ -67,17 +65,18 @@ router.get('/edit/:id', withAuth, async (req, res) => {
         ]
       })
       if (!dashInfo) {
-        // if no user is found, return an error
-        res.status(404).json({ message: 'No post found.' });
+        res.status(400).json({ message: 'No post found.' });
         return;
       }
+      const blog = dashInfo.get({ plain: true });
+      res.render("edit-blog", {blog, loggedIn: true});
     } catch(err) {
       console.log(err);
-      res.status(500).json(err);
+      res.status(400).json(err);
     }
   });
   
 //Delete blog post
-router.delete('')
+//router.delete('')
 
 module.exports = router;
