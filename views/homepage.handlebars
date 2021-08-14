@@ -1,5 +1,9 @@
-{{#each posts}}
-{{> post-info}}
+<ul>
+{{#each posts as |post|}}
+
+<li>{{> post-info post}}</li>
+</ul>
+
 {{else}}
 <p>There are no posts</p>
 {{/each}}
