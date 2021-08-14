@@ -23,5 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
   document
-    .querySelector(".login-form").addEventListener("submit", loginFormHandler);
+    .querySelector(".login-form")
+    .addEventListener("submit", loginFormHandler);
 });
