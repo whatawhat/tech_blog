@@ -1,0 +1,21 @@
+{{> post-info post}}
+
+{{#if loggedIn}}
+<form class="comment-form">
+  <div>
+    <textarea name="comment-body"></textarea>
+  </div>
+
+  <div>
+    <button type="submit">Add Comment</button>
+    <a href="/api/posts/edit/{{post.id}}" class="edit-post-form ">Add a comment</button>
+  </div>
+</form>
+{{/if}}
+
+{{> comment-info post.comments}}
+
+{{#if loggedIn}}
+<script src="../public/js/edit-post.js"></script>
+<script src="../public/js/comment.js"></script>
+{{/if}}
