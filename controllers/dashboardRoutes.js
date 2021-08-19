@@ -10,6 +10,24 @@ const SequelizeStore = require("connect-session-sequelize")(session.Store);
 //Connect to database
 const sequelize = require("../config/connection");
 
+// router.get('/', withAuth, (req, res) => {
+//   Blog.findAll({
+//     where: {
+//       user_id: req.session.user_id
+//     },
+//     attributes: [
+//       'id', 'name', 'content', 'created_at' 
+//     ]
+//   })
+//   .then(blogData => {
+//     const blogs = blogData.map(blog => blog.get({ plain: true}));
+//     res.render('dashboard', { blogs, loggedIn: true});
+//   })
+//   .catch(err => {
+//     console.log(err);
+//     res.status(500).json(err);
+//   });
+// });
 
 //Get blog posts with title and date created
 router.get('/', withAuth, async (req, res) => {
@@ -18,7 +36,7 @@ router.get('/', withAuth, async (req, res) => {
             where: {
                 user_id: req.session.user_id
             },
-            attributes: ["id", "title", "contents", "created_at"],
+            attributes: ["id", "name", "content", "created_at"],
             order: [[ 'date', 'DESC']],
             include: [
                 {
@@ -27,7 +45,7 @@ router.get('/', withAuth, async (req, res) => {
                 },
                 {
                     model: Comment,
-                    attributes: ["id", "comment", "created_at", "blog_id", "user_id"],
+                    attributes: ["id", "text", "created_at", "blog_id", "user_id"],
                     include: {
                         model: User,
                         attributes: ["username"],
