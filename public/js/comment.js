@@ -2,12 +2,13 @@ async function commentForm(e) {
     e.preventDefault();
   
     const commentText = document.getElementById("commentAdd").value.trim();
-
+    const post_id = document.getElementById('post-header').dataset.index;
+    
     const commentInput = await fetch(`/api/myDashboard/comment`, {
       method: 'POST',
       body: JSON.stringify({
-        comment: commentText,
-        blog_id: document.getElementById('commentAdd').dataset.blog_id
+        text: commentText,
+        post_id
       }),
       headers: { 'Content-Type': 'application/json' },
     })
@@ -19,5 +20,5 @@ async function commentForm(e) {
     }
     }
 
-    document.getElementById('addNewComment').addEventListener('submit', commentForm);
+    document.getElementById('add-comment-btn').addEventListener('click', commentForm);
     
