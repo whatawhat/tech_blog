@@ -20,19 +20,24 @@
 
 </section>
 
-{{#if posts.length}}
+{{#if blogs.length}}
 <section>
   <h2>Your Posts</h2>
-  <ol>
-    {{#each posts as |post|}}
-    <li>
-      {{> post-info post}}
-      <a href="/dashboard/edit/{{post.id}}" class="edit-link">Edit post</a>
-    </li>
+    {{#each blogs as |blog|}}
+    <div class="card">
+      <div class="card-header">
+        <h4>{{blog.name}}</h4>
+        <p>{{blog.content</p>
+        <p class="blockquote-footer">Posted on {{format_date created_at}}</p>
+        <button class="delete" onclick="deleteBlog({{blog.id}})" id="delete-blog-{{blog.id}}"
+      </div>
+    </div>
     {{/each}}
-  </ol>
-</section>
-{{/if}}
-
+    </section>
+    {{/if}}
+    
+<button type="submit" class="btn"><a class="link" href="/dashboard/new">+ New Post</a></button>
+<script src='/js/delete-post.js'></script>
+    
 <!--Script to add a post-->
 <script src="../public/js/add-post.js"></script>
