@@ -16,11 +16,8 @@ async function editFormHandler(e) {
 
     // Create a string with whichever updates were provided
     let userUpdate = '{' + [username, email, password].filter(value => value).join(',') + '}';
-    // Create the JSON parsed object
     userUpdate = JSON.parse(userUpdate)
 
-
-    // use the update route to update the post
     const response = await fetch(`/api/users/${id}`, {
         method: 'PUT',
         body: JSON.stringify(userUpdate),
@@ -28,10 +25,8 @@ async function editFormHandler(e) {
           'Content-Type': 'application/json'
         }
       });
-    // if the edit action is successful, redirect to the dashboard page, otherwise display the error
     if (response.ok) {
         document.location.replace('/dashboard');
-        // otherwise, display the error
         } else {
         alert(response.statusText);
         }
