@@ -19,13 +19,13 @@ const seedData = async() => {
     console.log("Seed users ran");
     //await blogSeed();
     await Blog.bulkCreate(blogSeed, {
-        individualHooks: true,
+        //individualHooks: true,
         returning: true,
       });
     console.log("Blogs posted");
     //await commentSeed();
     await Comment.bulkCreate(commentSeed, {
-        individualHooks: true,
+        //individualHooks: true,
         returning: true,
       });
     console.log("Comments are added");
