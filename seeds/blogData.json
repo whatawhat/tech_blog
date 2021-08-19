@@ -1,12 +1,17 @@
 [
   {
-    "title": "Hello",
+    "name": "Hello",
     "content": "Hello World",
     "user_id": 1
   },
   {
-    "title": "Goodbye",
+    "name": "Goodbye",
     "content": "Goodbye Sunshine",
+    "user_id": 2
+  },
+  {
+    "name": "Bootstrap highlights",
+    "content": "Bootstrap cards are very cool!",
     "user_id": 2
   }
 ]
