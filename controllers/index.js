@@ -6,7 +6,7 @@ const dash = require('./dashboardRoutes');
 
 router.use('/', home);
 router.use('/api', apiDir);
-router.use('api', dash);
+router.use('/dashboard', dash);
 
 
 router.use((req, res) => {
