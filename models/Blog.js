@@ -12,7 +12,7 @@ Blog.init(
             primaryKey:true,
             autoIncrement: true,
           },
-        title: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -28,12 +28,13 @@ Blog.init(
             references: {
                 model: 'user',
                 key: 'id',
-            },
-        },
-        date: {
-            type:DataTypes.DATE,
-            defaultValue: DATE.NOW,
-            },
+            }
+        }
+    //     date: {
+    //         type:DataTypes.DATE,
+    //         defaultValue: DATE.NOW,
+    //         },
+    // },
     },
     {
         sequelize,
