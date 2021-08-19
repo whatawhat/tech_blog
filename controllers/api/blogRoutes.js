@@ -1,7 +1,5 @@
 const router = require("express").Router();
-//Add models so I can use them
 const { User, Blog, Comment } = require("../../models");
-//Express session data
 const session = require("express-session");
 //Authorization
 const withAuth = require("../../utils/auth");
@@ -32,7 +30,7 @@ router.post("/", withAuth, async (req, res) => {
 router.get("/", withAuth, async (req, res) => {
   try {
     const blogInfo = await Blog.findAll({
-      attributes: ["id", "title", "content", "created_at"],
+      attributes: ["id", "name", "content", "created_at"],
       order: [["created_at", "DESC"]],
       include: [
         {
@@ -41,7 +39,7 @@ router.get("/", withAuth, async (req, res) => {
         },
         {
           model: Comment,
-          attributes: ["id", "content", "post_id", "created_at", "user_id"],
+          attributes: ["id", "text", "blog_id", "created_at", "user_id"],
           include: {
             model: User,
             attributes: ["username"],
@@ -71,7 +69,7 @@ router.get("/:id", withAuth, async (req, res) => {
       include: [
         {
           model: Blog,
-          attributes: ["title", "id", "content", "created_at"],
+          attributes: ["name", "id", "content", "created_at"],
         },
         {
           model: User,
@@ -79,10 +77,10 @@ router.get("/:id", withAuth, async (req, res) => {
         },
         {
           model: Comment,
-          attributes: ["id", "content", "post_id", "created_at"],
+          attributes: ["id", "text", "blog_id", "created_at"],
           include: {
             model: Blog,
-            attributes: ["title"],
+            attributes: ["name"],
           },
         },
       ],
@@ -114,6 +112,7 @@ router.put("/id", withAuth, async (req, res) => {
     res.status(400).json(err);
   }
 });
+
 //Delete a blog
 router.delete("/:id", withAuth, async (req, res) => {
   try {
