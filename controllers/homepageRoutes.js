@@ -14,7 +14,7 @@ const withAuth = require("../utils/auth");
 router.get('/login', async (req, res) => {
     try {
         if (req.session.loggedIn) {
-            res.redirect('/');
+            res.redirect('/dashboard');
             return;
         }
         res.render('login');
@@ -43,7 +43,7 @@ router.get('/signup', async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const homeInfo = await Blog.findAll({
-            attributes: ["id", "title", "content", "created_at"],
+            attributes: ["id", "name", "content", "created_at"],
             order: [[ 'created_at', 'DESC']],
             include: [
                 {
@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
                 },
                 {
                     model: Comment,
-                    attributes: ["id", "comment", "blog_id", "user_id", "created_at"],
+                    attributes: ["id", "text", "blog_id", "user_id", "created_at"],
                     include: {
                         model: User,
                         attributes: ["username"],
@@ -77,7 +77,7 @@ router.get("/post/:id", async (req, res) => {
     try {
         const homeInfo = await Blog.findAll({
             where: { id: req.params.id },
-            attributes: ["id", "title", "content", "created_at"],
+            attributes: ["id", "name", "content", "created_at"],
             include: [
                 {
                     model: User,
@@ -85,7 +85,7 @@ router.get("/post/:id", async (req, res) => {
                 },
                 {
                     model: Comment,
-                    attributes: ["id", "comment", "blog_id", "user_id", "created_at"],
+                    attributes: ["id", "text", "blog_id", "user_id", "created_at"],
                     include: {
                         model: User,
                         attributes: ["username"],
