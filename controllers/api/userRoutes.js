@@ -1,7 +1,5 @@
 const router = require("express").Router();
-//Add models so I can use them
 const { User, Blog, Comment } = require("../../models");
-//Express session data
 const session = require("express-session");
 //Authorization
 const withAuth = require("../../utils/auth");
@@ -9,6 +7,34 @@ const withAuth = require("../../utils/auth");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 //Routes
+
+// Add user
+router.post("/", async (req, res) => {
+  try {
+    const userInfo = await User.create({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+    });
+    if (!userInfo) {
+      res.status(400).json({ message: "No user with that email address!" });
+      return;
+    }
+    // otherwise, save the session, and return the user object and a success message
+    req.session.save(() => {
+      // declare session variables
+      req.session.user_id = userInfo.id;
+      req.session.username = userInfo.username;
+      req.session.loggedIn = true;
+
+      res.json(userInfo);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
+
 //Get user by id
 router.get("/:id", async (req, res) => {
   try {
@@ -47,45 +73,19 @@ router.get("/:id", async (req, res) => {
 
 
 
-// Add user
-router.post("/", async (req, res) => {
-  try {
-    // create method
-    // expects an object in the form {username: 'Lernantino', email: 'lernantino@gmail.com', password: 'password1234'}
-    const userInfo = await User.create({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-    });
-    if (!userInfo) {
-      res.status(400).json({ message: "No user with that email address!" });
-      return;
-    }
-    // otherwise, save the session, and return the user object and a success message
-    req.session.save(() => {
-      // declare session variables
-      req.session.user_id = userInfo.id;
-      req.session.username = userInfo.username;
-      req.session.loggedIn = true;
 
-      res.json(userInfo);
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json(err);
-  }
-});
 
 // Login
 router.post("/login", async (req, res) => {
   try {
     const userInfo = await User.findOne({
-      where: { email: req.body.email }
+      where: { username: req.body.username }
+        // email: req.body.email }
     });
 
-    // if no email
+    // if no username
     if (!userInfo) {
-      res.status(400).json({ message: "No user with that email address!" });
+      res.status(400).json({ message: "No user with that username!" });
       return;
     }
     const validPass = userInfo.checkPassword(req.body.password);
