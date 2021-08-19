@@ -1,11 +1,33 @@
-<ul>
-{{#each posts as |post|}}
+{{#each blogs as |blog| }}
 
-<li>{{> post-info post}}</li>
-</ul>
+<div class="card ">
+    <div class="card-header">
+        <h2><a href="/api/posts/{{blog.id}}" class="mx-3 card-title">{{blog.name}}</a></h2>
+    </div>
+    <div class="card-body mx-3">
+        <p class="card-text">{{blog.content}}</p>
+    </div>
+    <p class="mx-3 mt-3 blockquote-footer">Created by {{blog.user.username}} on {{format_date blog.createdAt}}</p>
 
-{{else}}
-<p>There are no posts</p>
+    {{#if blog.comments}}
+    <ul class="list-group list-group-flush">
+        {{#each blog.comments as |comment| }}
+
+            <li class="list-group-item">
+                <div class="card border-info" >
+                    <div class="card-body">
+                        <blockquote class="blockquote">
+                            <p>{{comment.text}}</p>
+                            <footer class="blockquote-footer"> Comment from <cite>{{comment.user.username}}</cite> on {{format_date comment.updatedAt}}</footer>
+                        </blockquote>
+                        
+                    </div>
+                </div>
+            </li>
+
+        {{/each}}
+        </ul>
+    {{/if}}
+</div>
 {{/each}}
-
 
