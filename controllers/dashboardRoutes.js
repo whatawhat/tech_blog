@@ -37,7 +37,7 @@ router.get('/', withAuth, async (req, res) => {
                 user_id: req.session.user_id
             },
             attributes: ["id", "name", "content", "created_at"],
-            order: [[ 'date', 'DESC']],
+            order: [[ 'created_at', 'DESC']],
             include: [
                 {
                     model: User,
@@ -64,9 +64,9 @@ router.get('/', withAuth, async (req, res) => {
 //Update blog post
 router.get('/edit/:id', withAuth, async (req, res) => {
     try {
-      const dashInfo = await Post.findOne({
+      const dashInfo = await Blog.findOne({
         where: { id: req.params.id },
-        attributes: ['id', 'contents', 'title', 'created_at'],
+        attributes: ['id', 'content', 'title', 'created_at'],
         include: [
           {
             model: Comment,
