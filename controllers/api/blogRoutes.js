@@ -97,7 +97,7 @@ router.get("/:id", withAuth, async (req, res) => {
 });
 
 //Update a blog
-router.put("/id", withAuth, async (req, res) => {
+router.put("/:id", withAuth, async (req, res) => {
   try {
     const blogInfo = await Blog.update(req.body, {
       where: { id: req.params.id },
