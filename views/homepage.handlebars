@@ -1,22 +1,22 @@
-{{#each blogs as |blog| }}
+{{#each posts as |post| }}
 
 <div class="card ">
-    <div class="card-header">
-        <h2><a href="/api/posts/{{blog.id}}" class="mx-3 card-title">{{blog.name}}</a></h2>
+    <div class="card-header d-flex justify-content-xxl-between">
+        <h2><a href="/api/posts/{{post.id}}" class="mx-3 card-title">{{post.name}}</a></h2>
     </div>
     <div class="card-body mx-3">
-        <p class="card-text">{{blog.content}}</p>
+        <p class="card-text">{{post.content}}</p>
     </div>
-    <p class="mx-3 mt-3 blockquote-footer">Created by {{blog.user.username}} on {{format_date blog.createdAt}}</p>
+    <p class="mx-3 mt-3 blockquote-footer">Created by {{post.user.username}} on {{format_date post.createdAt}}</p>
 
-    {{#if blog.comments}}
+    {{#if post.comments}}
     <ul class="list-group list-group-flush">
-        {{#each blog.comments as |comment| }}
+        {{#each post.comments as |comment| }}
 
             <li class="list-group-item">
-                <div class="card border-info" >
+                <div class="card border-info mb-3" >
                     <div class="card-body">
-                        <blockquote class="blockquote">
+                        <blockquote class="blockquote mb-0">
                             <p>{{comment.text}}</p>
                             <footer class="blockquote-footer"> Comment from <cite>{{comment.user.username}}</cite> on {{format_date comment.updatedAt}}</footer>
                         </blockquote>
