@@ -15,19 +15,19 @@
 
   <body>
     <div class="flex-column justify-space-around">
-    <header class="align-center">
+    <header class="display-flex justify-space-between align-center p-2">
       <h1><a href="/">Tech Blog</a></h1>
       <nav>
         <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
         {{#if loggedIn}}
-          <a href="/dashboard">Dashboard</a>
-          <button class="btn" id="logout">Logout</button>
+          <button class="no-button" id="logout">Logout</button>
         {{else}}
           <a href="/login">Login</a>
         {{/if}}
       </nav>
     </header>
-    <main class="container">
+    <main class="container container-fluid mt-5">
       {{{body}}}
     </main>
 
