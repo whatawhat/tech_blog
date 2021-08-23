@@ -1,129 +1,161 @@
 const router = require("express").Router();
-const { User, Blog, Comment } = require("../../models");
-const session = require("express-session");
+const { User, Post, Comment } = require("../../models");
+//const session = require("express-session");
 //Authorization
 const withAuth = require("../../utils/auth");
-const { post } = require("./userRoutes");
+//const { post } = require("./userRoutes");
+
 //Sequelize to save session so user remains logged in
-const SequelizeStore = require("connect-session-sequelize")(session.Store);
+//const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 //Create a new blog
 router.post("/", withAuth, async (req, res) => {
-  try {
-    const blogInfo = await Blog.create({
-      title: req.body.title,
-      content: req.body.content,
-      user_id: req.session.user_id,
-    });
-    if (!blogInfo) {
-      res.status(400).json({ message: "No blog with this id." });
-      return;
-    }
-    res.json(blogInfo);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json(err);
-  }
-});
+   try {
+    const newPost = await Post.create({
+       name: req.body.name,
+       content: req.body.content,
+       user_id: req.session.user_id,
+     });
+//     if (!blogInfo) {
+//       res.status(400).json({ message: "No blog with this id." });
+//       return;
+//     }
+     res.status(200).json(newPost);
+   } catch (err) {
+     res.status(400).json(err);
+   }
+ });
 
 //Get all blog posts with title and date
-router.get("/", withAuth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const blogInfo = await Blog.findAll({
-      attributes: ["id", "name", "content", "created_at"],
-      order: [["created_at", "DESC"]],
-      include: [
+    const posts = await Post.findAll({
+      //attributes: ["id", "name", "content", "created_at"],
+      //order: [["created_at", "DESC"]],
+      include: 
         {
           model: User,
-          attributes: ["username"],
-        },
-        {
-          model: Comment,
-          attributes: ["id", "text", "blog_id", "created_at", "user_id"],
-          include: {
-            model: User,
-            attributes: ["username"],
-          },
-        },
-      ],
+          model: Comment
+          //attributes: ["username"],
+        // {
+        //   model: Comment,
+        //   attributes: ["id", "text", "blog_id", "created_at", "user_id"],
+        //   include: {
+        //     model: User,
+        //     attributes: ["username"],
+        //   },
+        }
     });
-    if (!blogInfo) {
-      res.status(400).json({ message: "No blog posts." });
-      return;
-    }
-    res.json(blogInfo);
-  } catch (err) {
-    console.log(err);
+    res.status(200).json(posts);
+} catch (err) {
     res.status(400).json(err);
-  }
+}
+//     if (!blogInfo) {
+//       res.status(400).json({ message: "No blog posts." });
+//       return;
+//     }
+//     res.json(blogInfo);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).json(err);
+//   }
 });
 
-//Get one blog and get post title, content, username, date with option to leave comment
-router.get("/:id", withAuth, async (req, res) => {
+//Get one blog and get post
+router.get("/:id", async (req, res) => {
   try {
-    const blogInfo = await Blog.findOne({
-      attributes: { exclude: ["password"] },
+    const postData = await Post.findOne({
+      //attributes: { exclude: ["password"] },
       where: {
         id: req.params.id,
       },
+      attributes: ['id', 'content', 'name', 'created_at'],
       include: [
         {
-          model: Blog,
-          attributes: ["name", "id", "content", "created_at"],
-        },
-        {
-          model: User,
-          attributes: ["username"],
-        },
-        {
-          model: Comment,
-          attributes: ["id", "text", "blog_id", "created_at"],
-          include: {
-            model: Blog,
-            attributes: ["name"],
-          },
-        },
-      ],
+            model: User,
+            attributes: ["username"],
+          }
+      ]
+        // {
+        //   model: Blog,
+        //   attributes: ["name", "id", "content", "created_at"],
+        // },
+
+        // {
+        //   model: Comment,
+        //   attributes: ["id", "text", "blog_id", "created_at"],
+        //   include: {
+        //     model: Blog,
+        //     attributes: ["name"],
+        //   },
     });
-    if (!blogInfo) {
+    if (!postData) {
       res.status(400).json({ message: "No blog found with this id." });
       return;
     }
-    res.json(blogInfo);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
+    const commentsData = await Comment.findAll({
+        where: {post_id: req.params.id},
+        include: [
+            {model: User,
+            attributes: ['username'],}
+        ]
+    });
+
+    let commentsArr = [];
+    commentsData.forEach((comment) => {
+        commentsArr.push(comment.get({plain:true}));
+    })
+    const post = postData.get({plain: true });
+        res.render('onePost', { post, commentsArr, logged_in: req.session.logged_in});
+    }
+    catch(err){
+        res.status(400).json(err);
+    }
 });
+
+//New Comment
+router.post('/comment', async (req, res) => {
+    try{
+        req.body.user_id = req.session.user_id;
+  
+        const CommentData = Comment.create(req.body);
+  
+        res.status(200).json(CommentData);
+    } catch(err){
+        res.status(400).json(err);
+    }
+  })
+
+
 
 //Update a blog
-router.put("/:id", withAuth, async (req, res) => {
-  try {
-    const blogInfo = await Blog.update(req.body, {
-      where: { id: req.params.id },
-    });
-    if (!blogInfo) {
-      res.status(400).json({ message: "No blog post with that id" });
-      return;
-    }
-    res.json(blogInfo);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json(err);
-  }
-});
+// router.put("/:id", withAuth, async (req, res) => {
+//   try {
+//     const blogInfo = await Blog.update(req.body, {
+//       where: { id: req.params.id },
+//     });
+//     if (!blogInfo) {
+//       res.status(400).json({ message: "No blog post with that id" });
+//       return;
+//     }
+//     res.json(blogInfo);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).json(err);
+//   }
+// });
 
 //Delete a blog
-router.delete("/:id", withAuth, async (req, res) => {
+router.delete("/delete/:id", withAuth, async (req, res) => {
   try {
-    const blogInfo = await Blog.destroy({
+    const data = await Post.destroy({
       where: { id: req.params.id },
     });
-    if (!blogInfo) {
+    if (!data) {
       res.status(400).json({ message: "No comment for this blog post" });
       return;
     }
-    res.json(blogInfo);
+    res.status(200).json(data);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
