@@ -26,7 +26,7 @@ const sequelize = require("../config/connection");
    })
    .then(postData => {
     const posts = postData.map(post => post.get({ plain: true}));
-     res.render('dashboard', { post, logged_in: true});
+     res.render('dashboard', { posts, logged_in: true});
    })
    .catch(err => {
      console.log(err);
@@ -35,7 +35,7 @@ const sequelize = require("../config/connection");
  });
 
  router.get('/new', (req, res) => {
-   res.render('newpost');
+   res.render('create-post');
  });
 
 //Get blog posts with title and date created
