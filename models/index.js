@@ -44,10 +44,10 @@ User.hasMany(Comment, {
     onDelete: "cascade"
 });
 
-Blog.hasMany(Comment, {
-    foreignKey: "blog_id",
-    onDelete: "cascade"
-});
+// Blog.hasMany(Comment, {
+//     foreignKey: "blog_id",
+//     onDelete: "cascade"
+// });
 
 Post.hasMany(Comment, {
     foreignKey: "post_id",
