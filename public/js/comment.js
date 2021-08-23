@@ -1,13 +1,13 @@
 async function commentForm(e) {
     e.preventDefault();
   
-    const commentText = document.getElementById("commentAdd").value.trim();
+    const newComment = document.getElementById('comment-text').value;
     const post_id = document.getElementById('post-header').dataset.index;
     
-    const commentInput = await fetch(`/api/myDashboard/comment`, {
+    const commentInput = await fetch(`/api/posts/comment`, {
       method: 'POST',
       body: JSON.stringify({
-        text: commentText,
+        text: newComment,
         post_id
       }),
       headers: { 'Content-Type': 'application/json' },
