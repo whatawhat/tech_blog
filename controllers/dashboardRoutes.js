@@ -26,7 +26,7 @@ const sequelize = require("../config/connection");
    })
    .then(postData => {
     const posts = postData.map(post => post.get({ plain: true}));
-     res.render('dashboard', { posst, logged_in: true});
+     res.render('dashboard', { post, logged_in: true});
    })
    .catch(err => {
      console.log(err);
