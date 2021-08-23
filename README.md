@@ -4,16 +4,14 @@
 ### Table of Contents
 - [License](#License)
 - [Description](#Description)
-- [How to Use with Screenshots](#how-to-use-with-screenshots)
 - [Screenshots](#screenshots)
 - [Sources](#sources)
 
 ## License
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Description (UPDATE THIS)
-This is an application that allows the user to input data for their team via the terminal and then an HTML file is generated.
-
-## How to Use with Screenshots
+## Description
+This is an application that allows the user to write posts about tech. They can comment on other posts. 
 
 ## Screenshots (FIX THIS)
 This is the screen after you input the manager and given the option to add another team member.
