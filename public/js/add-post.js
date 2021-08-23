@@ -1,10 +1,10 @@
-const newBlog = async (e) => {
+async function newPost(e) {
     e.preventDefault();
   
     const name = document.querySelector("#title-input").value;
     const content = document.querySelector("#content-input").value;
   
-      const response = await fetch(`/api/blogs`, {
+      const response = await fetch(`/api/posts`, {
         method: 'POST',
         body: JSON.stringify({
           name,
@@ -21,4 +21,4 @@ const newBlog = async (e) => {
     }
   }
   
-  document.querySelector('#new-post-form').addEventListener('submit', newBlog);
+  document.querySelector('#new-post-form').addEventListener('submit', newPost);
