@@ -14,15 +14,14 @@
 //   }
 
 
-// module.exports = {
-//   format_date: (date) => {
-//     // Format date as MM/DD/YYYY
-//     return date.toLocaleDateString();
-//   },
+module.exports = {
+  format_date: (date) => {
+    // Format date as MM/DD/YYYY
+    return date.toLocaleDateString();
+  },
  
-// };
+};
 
 
-const format_date = (date) => new Date(date).toLocaleDateString();
 
-module.exports = { format_date };
+//module.exports = { format_date };
