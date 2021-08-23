@@ -1,5 +1,5 @@
-async function deleteBlog (blog_id) {
-  const blogData = await fetch('/api/blog/delete/${blog_id', {
+async function deleteBlog (post_id) {
+  const postData = await fetch('/api/posts/delete/${post_id', {
     method: 'DELETE',
   })
   if (postData.ok){
